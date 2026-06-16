@@ -128,7 +128,7 @@ footer{padding:30px 0 60px}
     <h1>The quantum clock is <em>already running</em> on payments crypto</h1>
     <div class="sub">
       <p class="lede">What a quantum computer breaks, what survives, and the order to fix it — mapped across a payments cryptographic estate.</p>
-      <div class="meta"><b>Verified</b> 2026-06<br><b>Basis</b> NIST FIPS 203/204/205 · CNSA 2.0<br><b>Scope</b> Readiness framework</div>
+      <div class="meta"><b>Verified</b> 2026-06<br><b>Basis</b> NIST FIPS 203/204/205<br><b>Scope</b> Readiness framework — not an operational tracker</div>
     </div>
   </header>
 
@@ -152,7 +152,7 @@ footer{padding:30px 0 60px}
   <!-- 02 ROADMAP -->
   <section>
     <div class="shead"><div class="snum">02</div><div><div class="stitle">Phased Migration Roadmap</div>
-      <div class="ssub">Against the NIST horizon — RSA and ECC deprecated by 2030, disallowed by 2035. Crypto-agility comes first: you cannot migrate what you cannot inventory or swap.</div></div></div>
+      <div class="ssub">Against the NIST horizon (IR 8547, US-federal guidance) — RSA/ECC deprecated 2030, disallowed 2035. A directional planning reference for commercial payments, not yet an OSFI mandate for Canadian banks. Crypto-agility comes first: you cannot migrate what you cannot inventory or swap.</div></div></div>
     <div class="road" id="r"></div>
   </section>
 
@@ -161,7 +161,7 @@ footer{padding:30px 0 60px}
     <div class="shead"><div class="snum">03</div><div><div class="stitle">The Target-State Standards</div>
       <div class="ssub">Use the FIPS designations in policy and procurement — not the competition names (Kyber / Dilithium / SPHINCS+).</div></div></div>
     <table><thead><tr><th>Standard</th><th>Role</th><th>Replaces</th><th>Status · 2026-06</th></tr></thead><tbody id="std"></tbody></table>
-    <div class="callout">CNSA 2.0 mandates Category-5 parameters exclusively: <span class="mono">ML-KEM-1024</span> and <span class="mono">ML-DSA-87</span>.</div>
+    <div class="callout"><b>Scope matters.</b> CNSA 2.0 mandates Category-5 (<span class="mono">ML-KEM-1024</span> + <span class="mono">ML-DSA-87</span>) for <b>US national-security systems</b> — not commercial banks. A payments environment commonly adopts <b>Category-3</b> (<span class="mono">ML-KEM-768</span> / <span class="mono">ML-DSA-65</span>) per risk appetite, reserving Category-5 for the highest-sensitivity, longest-lived assets.</div>
   </section>
 
   <footer>
@@ -170,9 +170,9 @@ footer{padding:30px 0 60px}
 </div>
 
 <script>
-const C=[["swift","SWIFT PKI & Message Signing","RSA-2048 · SHA-256","broken","safe","ML-DSA-87 (FIPS 204)","Certificates and signatures authenticating FIN/FINplus traffic; the root of payment nonrepudiation."],
-["nonrep","Payment Nonrepudiation","RSA · ECDSA","broken","safe","ML-DSA-87 (FIPS 204)","Signatures binding an institution to an instruction — the legal basis of settlement finality."],
-["tls","TLS / mTLS Key Exchange","ECDHE · RSA · ECDSA","broken","safe","ML-KEM — hybrid X25519+ML-KEM-768 → ML-KEM-1024","Session-key establishment on every API, channel and internal link. The #1 harvest-now-decrypt-later front line."],
+const C=[["swift","SWIFT PKI & Message Signing","RSA-2048 · SHA-256","broken","safe","ML-DSA (FIPS 204) — 65 commercial default · 87 for highest-assurance / CNSA 2.0","Certificates and signatures authenticating FIN/FINplus traffic; the root of payment nonrepudiation."],
+["nonrep","Payment Nonrepudiation","RSA · ECDSA","broken","safe","ML-DSA (FIPS 204) — 65 default · 87 for highest-assurance","Signatures binding an institution to an instruction — the legal basis of settlement finality."],
+["tls","TLS / mTLS Key Exchange","ECDHE · RSA · ECDSA","broken","safe","ML-KEM (FIPS 203) — hybrid X25519+ML-KEM-768 now → 1024 for highest-sensitivity","Session-key establishment on every API, channel and internal link. The #1 harvest-now-decrypt-later front line."],
 ["ipsec","IPsec / VPN to SWIFT","IKE (DH/ECDH) · RSA","broken","safe","ML-KEM in IKEv2","Tunnel key agreement and peer authentication for SWIFT network connectivity."],
 ["code","Code & Firmware Signing","RSA · ECDSA","broken","safe","ML-DSA / SLH-DSA (FIPS 205)","Integrity of deployed software and HSM/appliance firmware across the estate."],
 ["hsm","HSM-Held Asymmetric Keys","RSA · ECC pairs","broken","safe","PQC key types via HSM firmware","Private keys custodied in hardware — but an RSA key in an HSM is still Shor-breakable from its public key."],

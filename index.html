@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Post-Quantum Readiness — Payments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBFAF7;--ink:#0A0A0A;--muted:#5E5E5E;--faint:#9A9A9A;--soft:#E7E5DE;
+  --accent:#1B2BD8;                 /* cobalt */
+  --break:#CE1B2C;--weak:#A6760F;--safe:#137A43;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:"Schibsted Grotesk",Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+.mono{font-family:"Spline Sans Mono",monospace}
+.top-rule{height:7px;background:var(--accent)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 40px}
+
+/* MASTHEAD */
+.mast{padding:42px 0 26px;border-bottom:3px solid var(--ink)}
+.kick{display:flex;align-items:center;gap:12px;font:600 12px "Spline Sans Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.kick .sq{width:13px;height:13px;background:var(--accent)}
+h1{font-weight:900;font-size:clamp(38px,7vw,74px);letter-spacing:-.04em;line-height:.9;text-transform:uppercase;margin:20px 0 0;max-width:15ch}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:18px;margin-top:24px}
+.lede{font-size:16px;color:var(--muted);max-width:50ch}
+.meta{font:11.5px "Spline Sans Mono",monospace;color:var(--faint);text-align:right;line-height:1.9;letter-spacing:.02em}
+.meta b{color:var(--ink);font-weight:600}
+
+/* HNDL BAND */
+.hndl{display:grid;grid-template-columns:auto 1fr auto;gap:30px;align-items:center;padding:22px 0;border-bottom:3px solid var(--ink)}
+.hndl-mark{font-weight:900;font-size:15px;line-height:1.05;text-transform:uppercase;letter-spacing:-.01em;color:var(--break);border-left:6px solid var(--break);padding-left:14px}
+.hndl-eq{font:14px "Spline Sans Mono",monospace;line-height:1.8}
+.hndl-eq .v{color:var(--break)}.hndl-eq .o{color:var(--faint)}.hndl-eq .b{color:var(--accent)}
+.hndl-note{font-size:12.5px;color:var(--muted);max-width:34ch;text-align:right}
+
+/* SECTION */
+section{padding:46px 0;border-bottom:3px solid var(--ink)}
+.shead{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;margin-bottom:30px}
+.snum{font-weight:900;font-size:46px;line-height:.8;color:var(--accent);letter-spacing:-.04em}
+.stitle{font-weight:800;font-size:24px;text-transform:uppercase;letter-spacing:-.02em;line-height:1}
+.ssub{font-size:14px;color:var(--muted);margin-top:8px;max-width:74ch}
+
+/* TOGGLE + LEGEND */
+.controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:22px}
+.toggle{display:inline-flex;border:2px solid var(--ink)}
+.toggle button{border:0;background:transparent;color:var(--ink);font:700 13px "Schibsted Grotesk";text-transform:uppercase;letter-spacing:.04em;padding:11px 26px;cursor:pointer;border-right:2px solid var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.1}
+.toggle button:last-child{border-right:0}
+.toggle button .t{font:400 9.5px "Spline Sans Mono",monospace;letter-spacing:.02em;text-transform:none;color:var(--faint)}
+.toggle button.on{background:var(--accent);color:#fff}
+.toggle button.on .t{color:rgba(255,255,255,.75)}
+.legend{display:flex;gap:20px;font:600 11px "Spline Sans Mono",monospace;text-transform:uppercase;letter-spacing:.05em}
+.legend span{display:inline-flex;align-items:center;gap:8px;color:var(--muted)}
+.legend i{width:20px;height:4px}
+.lb{background:var(--break)}.lw{background:var(--weak)}.ls{background:var(--safe)}
+
+/* DEPENDENCY MAP */
+.map{display:grid;grid-template-columns:1.6fr 1fr;gap:0;border:2px solid var(--ink)}
+.estate{display:grid;grid-template-columns:1fr 1fr;border-right:2px solid var(--ink)}
+.node{background:var(--bg);border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:16px 17px 15px;cursor:pointer;transition:.12s;text-align:left;color:inherit;font:inherit;position:relative}
+.estate .node:nth-child(2n){border-right:0}
+.estate .node:nth-last-child(-n+2){border-bottom:0}
+.node:hover{background:#F1F1FB}
+.node.sel{background:#EDEEFF}
+.node.sel::after{content:"";position:absolute;top:0;left:0;width:5px;height:100%;background:var(--accent)}
+.node h4{font-weight:700;font-size:13.5px;letter-spacing:-.01em;line-height:1.14;margin-bottom:8px}
+.node .algo{font:9.5px "Spline Sans Mono",monospace;color:var(--faint);display:block;margin-bottom:13px;letter-spacing:.02em}
+.st{display:inline-flex;align-items:center;gap:8px;font:700 9.5px "Spline Sans Mono",monospace;text-transform:uppercase;letter-spacing:.08em}
+.st i{width:20px;height:4px}
+.broken{color:var(--break)}.broken i{background:var(--break)}
+.weak{color:var(--weak)}.weak i{background:var(--weak)}
+.safe{color:var(--safe)}.safe i{background:var(--safe)}
+/* INSPECTOR */
+.insp{padding:22px 24px;position:sticky;top:0;align-self:start}
+.insp .tag{font:11px "Spline Sans Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.insp h2{font-weight:800;font-size:21px;text-transform:uppercase;letter-spacing:-.02em;line-height:1.05;margin:10px 0 16px}
+.verdict{display:inline-flex;align-items:center;gap:10px;font:700 13px "Schibsted Grotesk";text-transform:uppercase;letter-spacing:.04em;padding-bottom:4px}
+.verdict i{width:34px;height:6px}
+.verdict.broken{color:var(--break)}.verdict.broken i{background:var(--break)}
+.verdict.weak{color:var(--weak)}.verdict.weak i{background:var(--weak)}
+.verdict.safe{color:var(--safe)}.verdict.safe i{background:var(--safe)}
+.row{border-top:2px solid var(--ink);padding:14px 0}.row:last-child{border-bottom:2px solid var(--ink)}
+.lbl{font:11px "Spline Sans Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
+.val{font-size:14px}.val.mono{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--muted);line-height:1.7}
+.migrate{color:var(--accent);font:600 13px "Spline Sans Mono",monospace;line-height:1.6}
+
+/* ROADMAP */
+.road{display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--ink)}
+.phase{border-right:2px solid var(--ink);padding:18px 18px 22px}
+.phase:last-child{border-right:0}
+.phase .yr{font:600 12px "Spline Sans Mono",monospace;color:var(--accent);letter-spacing:.04em}
+.phase .marker{width:14px;height:14px;background:var(--bg);border:2px solid var(--ink);margin:14px 0}
+.phase.now .marker{background:var(--accent);border-color:var(--accent)}
+.phase h4{font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:7px;line-height:1.1}
+.phase p{font-size:12.5px;color:var(--muted);line-height:1.5}
+.phase .now-tag{display:inline-block;font:600 9px "Spline Sans Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--accent);padding:2px 7px;margin-top:10px}
+
+/* STANDARDS */
+table{width:100%;border-collapse:collapse;border:2px solid var(--ink)}
+th,td{text-align:left;padding:13px 16px;border-bottom:2px solid var(--ink);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:700 10.5px "Spline Sans Mono",monospace;letter-spacing:.1em;text-transform:uppercase;background:var(--ink);color:var(--bg)}
+td:first-child{font:600 12.5px "Spline Sans Mono",monospace;color:var(--accent);white-space:nowrap;border-right:2px solid var(--soft)}
+.role{font-weight:600}.src{color:var(--muted);font-size:12.5px}
+.pill{display:inline-block;font:600 10px "Spline Sans Mono",monospace;padding:3px 9px;text-transform:uppercase;letter-spacing:.04em}
+.pill.f{background:var(--safe);color:#fff}.pill.d{background:var(--weak);color:#fff}.pill.c{background:var(--soft);color:var(--muted)}
+.callout{margin-top:18px;border-left:6px solid var(--accent);padding:4px 0 4px 16px;font-size:13.5px;color:var(--ink)}
+.callout .mono{color:var(--accent);font-weight:600}
+
+footer{padding:30px 0 60px}
+.foot{font-size:12.5px;color:var(--muted);max-width:80ch;line-height:1.6}
+.foot b{color:var(--ink);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.06em}
+
+@media(max-width:860px){
+ .wrap{padding:0 22px}.hndl{grid-template-columns:1fr;gap:14px}.hndl-note{text-align:left}
+ .map{grid-template-columns:1fr}.estate{border-right:0;border-bottom:2px solid var(--ink)}
+ .insp{position:static}.road{grid-template-columns:1fr 1fr}.phase:nth-child(2){border-right:0}
+ .phase{border-bottom:2px solid var(--ink)}.phase:nth-last-child(-n+2){border-bottom:0}
+}
+@media(max-width:520px){.road{grid-template-columns:1fr}.phase{border-right:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none;scroll-behavior:auto}}
+</style></head><body>
+<div class="top-rule"></div>
+<div class="wrap">
+
+  <header class="mast">
+    <div class="kick"><span class="sq"></span> Post-Quantum Readiness — Cross-Border Payments</div>
+    <h1>The quantum clock is <em>already running</em> on payments crypto</h1>
+    <div class="sub">
+      <p class="lede">What a quantum computer breaks, what survives, and the order to fix it — mapped across a payments cryptographic estate.</p>
+      <div class="meta"><b>Verified</b> 2026-06<br><b>Basis</b> NIST FIPS 203/204/205 · CNSA 2.0<br><b>Scope</b> Readiness framework</div>
+    </div>
+  </header>
+
+  <div class="hndl">
+    <div class="hndl-mark">Harvest&nbsp;Now,<br>Decrypt&nbsp;Later</div>
+    <div class="hndl-eq mono"><span class="o">if</span> data_secrecy_years <span class="o">&gt;</span> years_to_quantum &nbsp;<span class="o">→</span>&nbsp; <span class="v">already_exposed</span><br><span class="b">payment records</span> <span class="o">=</span> long-lived · high-value · <span class="v">recorded in transit today</span></div>
+    <div class="hndl-note">Traffic encrypted under RSA/ECC today is decryptable once a quantum computer exists. The capture is the attack.</div>
+  </div>
+
+  <!-- 01 MAP -->
+  <section>
+    <div class="shead"><div class="snum">01</div><div><div class="stitle">Cryptographic Dependency Map</div>
+      <div class="ssub">Toggle the quantum algorithm. <b style="color:var(--ink)">Shor</b> breaks the asymmetric crypto that authenticates and secures payments; <b style="color:var(--ink)">Grover</b> only weakens symmetric crypto, which larger keys defeat. Select any component for its migration target.</div></div></div>
+    <div class="controls">
+      <div class="toggle"><button class="on" id="ts" onclick="thr('shor')">Shor<span class="t">breaks factoring / discrete-log</span></button><button id="tg" onclick="thr('grover')">Grover<span class="t">halves symmetric strength</span></button></div>
+      <div class="legend"><span><i class="lb"></i>Broken</span><span><i class="lw"></i>Weakened</span><span><i class="ls"></i>Safe</span></div>
+    </div>
+    <div class="map"><div class="estate" id="g"></div><aside class="insp" id="insp"></aside></div>
+  </section>
+
+  <!-- 02 ROADMAP -->
+  <section>
+    <div class="shead"><div class="snum">02</div><div><div class="stitle">Phased Migration Roadmap</div>
+      <div class="ssub">Against the NIST horizon — RSA and ECC deprecated by 2030, disallowed by 2035. Crypto-agility comes first: you cannot migrate what you cannot inventory or swap.</div></div></div>
+    <div class="road" id="r"></div>
+  </section>
+
+  <!-- 03 STANDARDS -->
+  <section>
+    <div class="shead"><div class="snum">03</div><div><div class="stitle">The Target-State Standards</div>
+      <div class="ssub">Use the FIPS designations in policy and procurement — not the competition names (Kyber / Dilithium / SPHINCS+).</div></div></div>
+    <table><thead><tr><th>Standard</th><th>Role</th><th>Replaces</th><th>Status · 2026-06</th></tr></thead><tbody id="std"></tbody></table>
+    <div class="callout">CNSA 2.0 mandates Category-5 parameters exclusively: <span class="mono">ML-KEM-1024</span> and <span class="mono">ML-DSA-87</span>.</div>
+  </section>
+
+  <footer>
+    <p class="foot"><b>Honest scope.</b> &nbsp;This is a readiness framework, not a deployed migration. A quantum computer capable of breaking RSA-2048 does not exist today — this is a timeline problem, not a today problem — but multi-year deprecation horizons plus harvest-now-decrypt-later mean the inventory and crypto-agility work starts now. Standards facts are dated and cited to primary sources; re-verify before formal use.</p>
+  </footer>
+</div>
+
+<script>
+const C=[["swift","SWIFT PKI & Message Signing","RSA-2048 · SHA-256","broken","safe","ML-DSA-87 (FIPS 204)","Certificates and signatures authenticating FIN/FINplus traffic; the root of payment nonrepudiation."],
+["nonrep","Payment Nonrepudiation","RSA · ECDSA","broken","safe","ML-DSA-87 (FIPS 204)","Signatures binding an institution to an instruction — the legal basis of settlement finality."],
+["tls","TLS / mTLS Key Exchange","ECDHE · RSA · ECDSA","broken","safe","ML-KEM — hybrid X25519+ML-KEM-768 → ML-KEM-1024","Session-key establishment on every API, channel and internal link. The #1 harvest-now-decrypt-later front line."],
+["ipsec","IPsec / VPN to SWIFT","IKE (DH/ECDH) · RSA","broken","safe","ML-KEM in IKEv2","Tunnel key agreement and peer authentication for SWIFT network connectivity."],
+["code","Code & Firmware Signing","RSA · ECDSA","broken","safe","ML-DSA / SLH-DSA (FIPS 205)","Integrity of deployed software and HSM/appliance firmware across the estate."],
+["hsm","HSM-Held Asymmetric Keys","RSA · ECC pairs","broken","safe","PQC key types via HSM firmware","Private keys custodied in hardware — but an RSA key in an HSM is still Shor-breakable from its public key."],
+["rest","Data-at-Rest Encryption","AES-256","safe","weak","Keep AES-256","Bulk encryption of stored payment data; 256-bit retains ~128-bit strength under Grover."],
+["hash","Message Integrity Hashing","SHA-256 / SHA-384","safe","weak","SHA-384+","Integrity verification and HMACs; larger digests absorb Grover's quadratic speedup."]];
+const P=[["2025–2026","Inventory & Crypto-Agility","Discover every cryptographic dependency; build the ability to swap algorithms without re-architecting.",1],
+["2026–2028","Hybrid Pilots","Classical+PQC on the highest harvest-now-decrypt-later exposure first — long-lived recorded traffic.",0],
+["2028–2030","Production Migration","Roll PQC across PKI, TLS, signing and HSM key types; align to CNSA 2.0 where mandated.",0],
+["2030–2035","Legacy Decommission","Retire RSA and ECC per NIST deprecation (2030) and disallowance (2035).",0]];
+const S=[["FIPS 203",'<span class="role">ML-KEM</span> — key encapsulation',"RSA-OAEP, ECDH",'<span class="pill f">Final · 2024-08</span>'],
+["FIPS 204",'<span class="role">ML-DSA</span> — digital signatures',"RSA, ECDSA",'<span class="pill f">Final · 2024-08</span>'],
+["FIPS 205",'<span class="role">SLH-DSA</span> — hash-based signatures',"RSA/ECDSA (conservative)",'<span class="pill f">Final · 2024-08</span>'],
+["FIPS 206",'<span class="role">FN-DSA</span> — compact signatures',"ECDSA (bandwidth-limited)",'<span class="pill d">Draft</span>'],
+["HQC",'<span class="role">code-based KEM</span> — backup',"— (algorithm diversity)",'<span class="pill c">Selected 2025 · ~2027</span>']];
+let thrt="shor",sel="swift";const L={broken:"Broken",weak:"Weakened",safe:"Safe"},
+V={broken:"Broken under this threat",weak:"Weakened — mitigable",safe:"Safe under this threat"};
+function draw(){document.getElementById("g").innerHTML=C.map(c=>{const s=thrt==="shor"?c[3]:c[4];
+return `<button class="node ${c[0]===sel?'sel':''}" onclick="pick('${c[0]}')"><h4>${c[1]}</h4><span class="algo">${c[2]}</span><span class="st ${s}"><i></i>${L[s]}</span></button>`}).join("");insp();}
+function insp(){const c=C.find(x=>x[0]===sel),s=thrt==="shor"?c[3]:c[4];
+document.getElementById("insp").innerHTML=`<div class="tag">Selected Component</div><h2>${c[1]}</h2>
+<div class="verdict ${s}"><i></i>${V[s]}</div>
+<div class="row"><div class="lbl">Cryptography in use</div><div class="val mono">${c[2]}</div></div>
+<div class="row"><div class="lbl">Role in the estate</div><div class="val">${c[6]}</div></div>
+<div class="row"><div class="lbl">Migration target</div><div class="migrate">${c[5]}</div></div>`;}
+function pick(id){sel=id;draw();}
+function thr(t){thrt=t;ts.className=t==="shor"?"on":"";tg.className=t==="grover"?"on":"";draw();}
+document.getElementById("r").innerHTML=P.map(p=>`<div class="phase ${p[3]?'now':''}"><div class="yr">${p[0]}</div><div class="marker"></div><h4>${p[1]}</h4><p>${p[2]}</p>${p[3]?'<span class="now-tag">In progress</span>':''}</div>`).join("");
+document.getElementById("std").innerHTML=S.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="src">${r[2]}</td><td>${r[3]}</td></tr>`).join("");
+draw();
+</script></body></html>

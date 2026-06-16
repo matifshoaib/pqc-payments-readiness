@@ -3,7 +3,7 @@
 An interactive readiness map for the quantum threat to a payments cryptographic
 estate — what a quantum computer breaks, what survives, and the order to fix it.
 
-**🔗 Live dashboard:** https://[your-username].github.io/pqc-payments-readiness/
+**🔗 Live dashboard:** https://matifshoaib.github.io/pqc-payments-readiness/
 
 ---
 
